@@ -1,0 +1,30 @@
+---
+#- yum: name=MySQL-python state=present
+
+- name: Starting MySQL
+  service: name=mysql state=started
+
+- name: Changing root pass
+#  mysql_user: name=root password={{ rootpass }}
+  shell: echo "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('{{ rootpass }}');" | mysql -u root
+  ignore_errors: true
+
+- name: Creating new database
+#  mysql_db: login_user=root login_password={{ rootpass }} name={{ e }} state=present
+  shell: echo "CREATE DATABASE weblate;" | mysql -u root -p{{ rootpass }}
+  ignore_errors: true
+
+#- name: Creating users
+#  mysql_user: login_user=root login_password={{ rootpass }} name=root host='localhost' password={{ rootpass }} priv=*.*:ALL state=present
+#  shell: echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '{{ rootpass }}' WITH GRANT OPTION;" | mysql -u root -p{{ rootpass }}
+
+- name: Creating users
+  mysql_user: login_user=root login_password={{ rootpass }} name=weblate host='localhost' password={{ weblatepass }} priv=*.*:ALL state=present
+#  shell: echo "GRANT ALL PRIVILEGES ON weblate.* TO 'weblate'@'%' IDENTIFIED BY '{{ weblatepass }}';" | mysql -u root -p{{ rootpass }}
+
+- name: Creating users
+#  mysql_user: login_user=root login_password={{ rootpass }} name=admin host='localhost' password={{ adminpass }} priv=*.*:ALL state=present
+  shell: echo "GRANT ALL PRIVILEGES ON weblate.* TO 'weblate'@'localhost' IDENTIFIED BY '{{ weblatepass }}';" | mysql -u root -p{{ rootpass }}
+
+- name: Flushing privileges
+  shell: echo "FLUSH PRIVILEGES;" | mysql -u root -p{{ rootpass }}

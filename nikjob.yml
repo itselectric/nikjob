@@ -1,0 +1,10 @@
+---
+
+- hosts: nikjob
+  remote_user: nik
+  sudo: yes
+     
+  roles:
+#   - preparing
+#   - database
+   - weblate

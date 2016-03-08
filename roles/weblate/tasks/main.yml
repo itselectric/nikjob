@@ -1,0 +1,26 @@
+---
+- set_fact: launch="/bin/nohup /bin/python /usr/local/weblate/manage.py run_gunicorn --bind=localhost:8000 --workers=3 --pid=/run/gunicorn.pid --log-file /var/log/weblate.log &"
+
+- name: Downloading Weblate
+  git: repo=git://github.com/nijel/weblate.git dest=/usr/local/ accept_hostkey=yes
+
+- name: Copying settings file
+  template: src=settings.py dest=/usr/local/weblate/weblate/
+
+- name: Starting Weblate
+  shell: {{ launch }}
+
+- name: Configuring Nginx
+  copy: src=weblate.conf dest=/etc/nginx/conf.d/
+
+- name: Starting Nginx
+  service: name=nginx state=started
+
+- name: Autostart services
+  shell: chkconfig {{ item }} on
+  with_items:
+    - mysql
+    - nginx
+
+- name: Autostart services
+  lineinfile: dest=/etc/rc.d/rc.local line={{ launch }}

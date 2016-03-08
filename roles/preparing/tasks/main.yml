@@ -1,0 +1,65 @@
+---
+- name: Installing repos
+  yum: name={{ item }} state=present
+  with_items:
+      - http://repo.percona.com/testing/centos/7/os/noarch/percona-testing-0.0-1.noarch.rpm
+      - http://www.percona.com/downloads/percona-release/percona-release-0.0-1.x86_64.rpm
+      - http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
+#      - http://www.percona.com/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm
+
+- name: Enabling EPEL
+  ini_file:  dest=/etc/yum.repos.d/epel.repo section=epel option=enabled value=1
+
+- name: Installing tools
+  yum: name={{ item }} state=present update_cache=yes
+  with_items:
+    - vim
+    - mc
+    - unzip
+    - zip
+    - telnet
+    - net-tools
+    - ntp
+    - nano
+    - sendmail
+    - htop
+    - nmap
+    - wget
+    - nginx
+    - gcc
+    - python-pip
+    - python-devel
+    - python-django
+    - translate-toolkit
+    - python-whoosh
+    - python-pillow
+    - python-pylibravatar
+    - python-babel
+    - git
+    - mercurial
+    - python-social-auth
+    - python-django-compressor
+    - MySQL-python
+    - python-lxml
+    - python-dateutil
+    - python-virtualenv
+
+- name: Installing python tools
+  pip: name={{ item }}
+  with_items:
+    - django-crispy-forms
+    - pyuca
+    - https://pypi.python.org/packages/py2.py3/s/six/six-1.10.0-py2.py3-none-any.whl
+    - weblate
+    - gunicorn
+
+- name: Install Percona
+  yum: name={{ item }} state=present
+  with_items:
+      - Percona-XtraDB-Cluster-55
+
+- name: Initialization base databases
+  shell: /usr/bin/mysql_install_db
+
+- name: Allowing port in firewall
+  firewalld: service=http permanent=true state=enabled

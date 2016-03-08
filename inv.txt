@@ -1,0 +1,2 @@
+[nikjob]
+192.168.56.56 ansible_user=nik ansible_ssh_pass=0559 ansible_sudo_pass=0559 rootpass=616603 weblatepass=weblate dbname=weblate
