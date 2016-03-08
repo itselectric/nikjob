@@ -1,14 +1,14 @@
 ---
-- set_fact: launch="/bin/nohup /bin/python /usr/local/weblate/manage.py run_gunicorn --bind=localhost:8000 --workers=3 --pid=/run/gunicorn.pid --log-file /var/log/weblate.log &"
+- set_fact: launch="/bin/nohup /bin/python /usr/local/weblate/weblate/manage.py run_gunicorn --bind=localhost:8000 --workers=3 --pid=/run/gunicorn.pid --log-file /var/log/weblate.log &"
 
 - name: Downloading Weblate
-  git: repo=git://github.com/nijel/weblate.git dest=/usr/local/ accept_hostkey=yes
+  git: repo=git://github.com/nijel/weblate.git dest=/usr/local/weblate accept_hostkey=yes
 
 - name: Copying settings file
   template: src=settings.py dest=/usr/local/weblate/weblate/
 
 - name: Starting Weblate
-  shell: {{ launch }}
+  shell: "{{ launch }}"
 
 - name: Configuring Nginx
   copy: src=weblate.conf dest=/etc/nginx/conf.d/
