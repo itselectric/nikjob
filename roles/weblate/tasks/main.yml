@@ -23,4 +23,4 @@
     - nginx
 
 - name: Autostart services
-  lineinfile: dest=/etc/rc.d/rc.local line={{ launch }}
+  lineinfile: dest=/etc/rc.d/rc.local line="{{ launch }}"
