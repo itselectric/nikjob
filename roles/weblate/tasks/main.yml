@@ -6,7 +6,7 @@
   template: src=settings.py dest=/usr/local/weblate/weblate/
 
 - name: Starting Weblate
-  shell: /bin/nohup /bin/python /usr/local/weblate/manage.py runserver 0:8000 > /var/log/weblate.log &
+  shell: /bin/python /usr/local/weblate/manage.py migrate && /bin/python /usr/local/weblate/manage.py collectstatic --noinput && /bin/nohup /bin/python /usr/local/weblate/manage.py runserver 0:8000 > /var/log/weblate.log &
 
 - name: Configuring Nginx
   lineinfile: line={{ item }} dest=/etc/nginx/nginx.conf insertafter="location / {"
