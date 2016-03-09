@@ -1,17 +1,22 @@
 ---
-- set_fact: launch="/bin/nohup /bin/python /usr/local/weblate/weblate/manage.py run_gunicorn --bind=localhost:8000 --workers=3 --pid=/run/gunicorn.pid --log-file /var/log/weblate.log &"
-
 - name: Downloading Weblate
-  git: repo=git://github.com/nijel/weblate.git dest=/usr/local/weblate accept_hostkey=yes
+  git: repo=git://github.com/nijel/weblate.git dest=/usr/local/
 
 - name: Copying settings file
   template: src=settings.py dest=/usr/local/weblate/weblate/
 
 - name: Starting Weblate
-  shell: "{{ launch }}"
+  shell: /bin/nohup /bin/python /usr/local/weblate/manage.py runserver 0:8000 > /var/log/weblate.log &
 
 - name: Configuring Nginx
-  copy: src=weblate.conf dest=/etc/nginx/conf.d/
+  lineinfile: line={{ item }} dest=/etc/nginx/nginx.conf insertafter="location / {"
+  with_items:
+    - '        proxy_pass         http://127.0.0.1:8000;'
+    - '        proxy_redirect     default;'
+    - '        proxy_set_header   Host             $host;'
+    - '        proxy_set_header   X-Real-IP        $remote_addr;'
+    - '        proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;'
+    - '        proxy_max_temp_file_size 0;'
 
 - name: Starting Nginx
   service: name=nginx state=started
@@ -23,4 +28,4 @@
     - nginx
 
 - name: Autostart services
-  lineinfile: dest=/etc/rc.d/rc.local line="{{ launch }}"
+  lineinfile: dest=/etc/rc.d/rc.local line="/bin/nohup /bin/python /usr/local/weblate/manage.py runserver 0:8000 > /var/log/weblate.log &"
