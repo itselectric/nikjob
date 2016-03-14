@@ -1,12 +1,20 @@
 ---
+- set_fact: launch="/usr/sbin/uwsgi /usr/local/weblate/weblate.txt"
+
 - name: Downloading Weblate
-  git: repo=git://github.com/nijel/weblate.git dest=/usr/local/weblate/
+  git: repo=git://github.com/nijel/weblate.git dest=/usr/local/weblate/ accept_hostkey=yes
 
 - name: Copying settings file
   template: src=settings.py dest=/usr/local/weblate/weblate/
 
+- name: Preparing Weblate
+  shell: /bin/python /usr/local/weblate/manage.py migrate && /bin/python /usr/local/weblate/manage.py collectstatic --noinput > /var/log/weblate.log &
+
+- name: Copying uWSGI config file
+  copy: src=weblate.txt dest=/usr/local/weblate/
+
 - name: Starting Weblate
-  shell: /bin/python /usr/local/weblate/manage.py migrate && /bin/python /usr/local/weblate/manage.py collectstatic --noinput && /bin/nohup /bin/python /usr/local/weblate/manage.py runserver 0:8000 > /var/log/weblate.log &
+  shell: '{{ launch }}'
 
 - name: Configuring Nginx
   copy: src=nginx.conf dest=/etc/nginx/nginx.conf
@@ -21,4 +29,4 @@
     - nginx
 
 - name: Autostart services
-  lineinfile: dest=/etc/rc.d/rc.local line="/bin/nohup /bin/python /usr/local/weblate/manage.py runserver 0:8000 > /var/log/weblate.log &"
+  lineinfile: dest=/etc/rc.d/rc.local line='{{ launch }}'

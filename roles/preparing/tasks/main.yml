@@ -63,5 +63,11 @@
   shell: /usr/bin/mysql_install_db
 
 - name: Allowing port in firewall
-  firewalld: service=http permanent=true state=enabled
+  firewalld: service=http permanent=true state=enabled immediate=yes
   ignore_errors: true
+
+- name: Allowing localhost in firewall
+  shell: firewall-cmd --permanent --zone=trusted --add-interface=lo
+
+- name: Restarting firewall
+  service: name=firewald state=reloaded
