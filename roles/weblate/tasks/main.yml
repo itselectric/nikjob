@@ -1,5 +1,5 @@
 ---
-- set_fact: launch="/usr/sbin/uwsgi /usr/local/weblate/weblate.txt"
+- set_fact: launch="/usr/bin/uwsgi /usr/local/weblate/weblate.txt"
 
 - name: Downloading Weblate
   git: repo=git://github.com/nijel/weblate.git dest=/usr/local/weblate/ accept_hostkey=yes

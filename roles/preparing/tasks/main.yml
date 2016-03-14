@@ -28,28 +28,28 @@
     - nginx
     - gcc
     - python-pip
+    - git
+    - mercurial
+    - MySQL-python
+
+- name: Installing python tools
+  pip: name={{ item }}
+  with_items:
     - python-devel
-    - python-django
     - translate-toolkit
     - python-whoosh
     - python-pillow
     - python-pylibravatar
     - python-babel
-    - git
-    - mercurial
-    - python-social-auth
-    - python-django-compressor
-    - MySQL-python
     - python-lxml
-    - python-dateutil
-    - python-virtualenv
-
-- name: Installing python tools
-  pip: name={{ item }}
-  with_items:
+    - python-social-auth
+    - Django
     - django-crispy-forms
     - pyuca
-    - https://pypi.python.org/packages/py2.py3/s/six/six-1.10.0-py2.py3-none-any.whl
+    - https://pypi.python.org/packages/2.7/d/django_compressor/django_compressor-2.0-py2.py3-none-any.whl
+    - python-dateutil
+    - python-virtualenv
+    - six
     - uwsgi
 #    - weblate
 #    - gunicorn
@@ -70,4 +70,4 @@
   shell: firewall-cmd --permanent --zone=trusted --add-interface=lo
 
 - name: Restarting firewall
-  service: name=firewald state=reloaded
+  service: name=firewalld state=reloaded
