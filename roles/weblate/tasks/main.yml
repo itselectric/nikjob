@@ -1,5 +1,5 @@
 ---
-- set_fact: launch="/usr/bin/uwsgi /usr/local/weblate/weblate.txt"
+- set_fact: launch="/bin/nohup /usr/bin/uwsgi /usr/local/weblate/weblate.ini >> /var/log/weblate.log &"
 
 - name: Downloading Weblate
   git: repo=git://github.com/nijel/weblate.git dest=/usr/local/weblate/ accept_hostkey=yes
@@ -8,10 +8,10 @@
   template: src=settings.py dest=/usr/local/weblate/weblate/
 
 - name: Preparing Weblate
-  shell: /bin/python /usr/local/weblate/manage.py migrate && /bin/python /usr/local/weblate/manage.py collectstatic --noinput > /var/log/weblate.log &
+  shell: /bin/python /usr/local/weblate/manage.py migrate && /bin/python /usr/local/weblate/manage.py collectstatic --noinput >> /var/log/weblate.log
 
 - name: Copying uWSGI config file
-  copy: src=weblate.txt dest=/usr/local/weblate/
+  copy: src=weblate.ini dest=/usr/local/weblate/
 
 - name: Starting Weblate
   shell: '{{ launch }}'
