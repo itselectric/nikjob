@@ -3,6 +3,8 @@
 - hosts: nikjob
   remote_user: nik
   sudo: yes
+  vars_files:
+   - secret.yml
      
   roles:
    - preparing
