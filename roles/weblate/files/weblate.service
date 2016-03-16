@@ -5,7 +5,7 @@ Description=uWSGI Weblate
 After=syslog.target
 
 [Service]
-ExecStart=/usr/bin/uwsgi --ini /usr/local/weblate/weblate.ini
+ExecStart=/usr/bin/uwsgi --ini /var/www/weblate/weblate.ini
 # Requires systemd version 211 or newer
 RuntimeDirectory=uwsgi
 Restart=always

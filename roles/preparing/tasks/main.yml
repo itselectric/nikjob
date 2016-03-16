@@ -76,6 +76,9 @@
     - python-social-auth
     - django-compressor
 
+- name: Preparing directory
+  file: path=/var/www state=directory owner=nginx group=nginx
+
 - name: Install Percona
   yum: name={{ item }} state=present
   with_items:
@@ -89,7 +92,7 @@
 
 - name: Allowing port in firewall
   firewalld: service=http permanent=true state=enabled immediate=yes
-  ignore_errors: true
+#  ignore_errors: true
 
 - name: Allowing localhost in firewall
   shell: firewall-cmd --permanent --zone=trusted --add-interface=lo

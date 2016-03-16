@@ -1,18 +1,18 @@
 ---
 - name: Downloading Weblate
-  git: repo=git://github.com/nijel/weblate.git dest=/usr/local/weblate/ accept_hostkey=yes
+  git: repo=git://github.com/nijel/weblate.git dest=/var/www/weblate/ accept_hostkey=yes
 
 - name: Copying service file
   copy: src=weblate.service dest=/etc/systemd/system/
 
 - name: Copying settings file
-  template: src=settings.py dest=/usr/local/weblate/weblate/
+  template: src=settings.py dest=/var/www/weblate/weblate/
 
 - name: Preparing Weblate
-  shell: /bin/python /usr/local/weblate/manage.py migrate && /bin/python /usr/local/weblate/manage.py collectstatic --noinput >> /var/log/weblate.log
+  shell: /bin/python /var/www/weblate/manage.py migrate && /bin/python /var/www/weblate/manage.py collectstatic --noinput >> /var/log/weblate.log
 
 - name: Copying uWSGI config file
-  copy: src=weblate.ini dest=/usr/local/weblate/
+  copy: src=weblate.ini dest=/var/www/weblate/
 
 - name: Starting Weblate
   service: name=weblate state=started

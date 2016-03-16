@@ -1,0 +1,25 @@
+---
+- name: Installing Ftp-server
+  yum: name=vsftpd state=installed
+
+- name: Copying config file
+  copy: src=vsftpd.conf dest=/etc/vsftpd
+
+- name: Creating group
+  group: name=ftpusers state=present
+
+- name: Creating user
+  user: name=developer1 password={{ dev_pass }} shell=/sbin/nologin createhome=no groups=ftpusers home=/var/www/weblate/
+
+- name: Accessing to directory
+  file: path=/var/www/weblate state=directory group=ftpusers recurse=no
+
+- name: Configuring firewall
+  firewalld: service=ftp permanent=true state=enabled immediate=yes
+#  ignore_errors: true
+
+- name: Starting vsFTPd
+  service: name=vsftpd state=started
+
+- name: Autorun vsFTPd
+  shell: systemctl enable vsftpd
