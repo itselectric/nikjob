@@ -1,4 +1,12 @@
 ---
+- name: Check SElinux status
+  lineinfile: dest=/etc/selinux/config regexp=^SELINUX= line=SELINUX=disabled
+  register: selin
+  ignore_errors: true
+
+- pause: prompt="Warning! SElinux was disabled. You nave to reboot target machine after installation."
+  when: selin.changed
+
 - name: Installing repos
   yum: name={{ item }} state=present
   with_items:
