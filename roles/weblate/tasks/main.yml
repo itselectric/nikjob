@@ -1,6 +1,4 @@
 ---
-#- set_fact: launch="/bin/nohup /usr/bin/uwsgi /usr/local/weblate/weblate.ini >> /var/log/weblate.log &"
-
 - name: Downloading Weblate
   git: repo=git://github.com/nijel/weblate.git dest=/usr/local/weblate/ accept_hostkey=yes
 
@@ -17,7 +15,6 @@
   copy: src=weblate.ini dest=/usr/local/weblate/
 
 - name: Starting Weblate
-#  shell: '{{ launch }}'
   service: name=weblate state=started
 
 - name: Configuring Nginx
@@ -33,5 +30,4 @@
     - nginx
     - weblate
 
-#- name: Autostart services
-#  lineinfile: dest=/etc/rc.d/rc.local line='{{ launch }}'
+- wait_for: port=8080
