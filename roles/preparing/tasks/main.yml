@@ -4,7 +4,7 @@
   register: selin
   ignore_errors: true
 
-- pause: prompt="Warning! SElinux was disabled. You have to reboot target machine after installation."
+- pause: prompt="Warning! SElinux was disabled. You have to reboot target machine after installation. Otherwise, the services won't work"
   when: selin.changed
 
 - name: Installing repos
