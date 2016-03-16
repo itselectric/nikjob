@@ -5,7 +5,7 @@
   git: repo=git://github.com/nijel/weblate.git dest=/usr/local/weblate/ accept_hostkey=yes
 
 - name: Copying service file
-  template: src=weblate.service dest=/etc/systemd/system/
+  copy: src=weblate.service dest=/etc/systemd/system/
 
 - name: Copying settings file
   template: src=settings.py dest=/usr/local/weblate/weblate/
