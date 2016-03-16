@@ -1,0 +1,18 @@
+# Systemd service file for uWSGI
+
+[Unit]
+Description=uWSGI Weblate
+After=syslog.target
+
+[Service]
+ExecStart=/usr/bin/uwsgi --ini /usr/local/weblate/weblate.ini
+# Requires systemd version 211 or newer
+RuntimeDirectory=uwsgi
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+#StandardError=syslog
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target

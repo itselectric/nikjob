@@ -61,6 +61,7 @@
 #    - https://pypi.python.org/packages/2.7/d/django_compressor/django_compressor-2.0-py2.py3-none-any.whl
     - six
     - uwsgi
+    - flask
 #    - weblate
 #    - gunicorn
 
